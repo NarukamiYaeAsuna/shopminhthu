@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Sản Phẩm Theo Bàn</title>
+    <script>
+        // Hàm hiển thị dữ liệu của tất cả các bàn
+        function displayTableData() {
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.innerHTML = ""; // Xóa nội dung cũ trước khi cập nhật
+
+            for (let i = 1; i <= 10; i++) {
+                const tableData = JSON.parse(localStorage.getItem(`table_${i}`)) || [];
+
+                if (tableData.length > 0) {
+                    const tableDiv = document.createElement('div');
+                    tableDiv.innerHTML = `
+                        <h3>Bàn ${i} 
+                            <button onclick="clearTableData(${i})">Xóa Bàn</button>
+                        </h3>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sản Phẩm</th>
+                                    <th>Giá Sản Phẩm</th>
+                                    <th>Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableData.map((product, index) => `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>${product.name}</td>
+                                        <td>${product.price}</td>
+                                        <td>${product.quantity}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    tableContainer.appendChild(tableDiv);
+                }
+            }
+        }
+
+        // Hàm xóa dữ liệu của một bàn cụ thể
+        function clearTableData(tableNumber) {
+            if (confirm(`Bạn có chắc chắn muốn xóa toàn bộ dữ liệu của bàn ${tableNumber}?`)) {
+                localStorage.removeItem(`table_${tableNumber}`);
+                alert(`Dữ liệu của bàn ${tableNumber} đã được xóa!`);
+                displayTableData(); // Cập nhật lại giao diện sau khi xóa
+            }
+        }
+
+        // Tải dữ liệu khi trang được tải
+        document.addEventListener('DOMContentLoaded', displayTableData);
+    </script>
+</head>
+<body>
+    <h1>Danh Sách Sản Phẩm Theo Bàn</h1>
+    <div id="tableContainer">
+        <!-- Dữ liệu của từng bàn sẽ được thêm vào đây -->
+    </div>
+</body>
+</html>
